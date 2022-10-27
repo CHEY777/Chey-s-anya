@@ -3665,176 +3665,128 @@ break
 
 
 case 'music': case 'play': case 'song': case 'ytplay': {
-    if (isBan) return reply(mess.banned)
-        if (isBanChat) return reply(mess.bangc)
-     reply(mess.wait)
-    let yts = require("yt-search")
-    let search = await yts(text)
-    let anu = search.videos[Math.floor(Math.random() * search.videos.length)]
-    let ytvc = await hx.youtube(anu.url)
-    let buttons = [
-    {buttonId: `-ytmp4 ${anu.url}`, buttonText: {displayText: '► Video'}, type: 1},
-    {buttonId: `-ytmp3 ${anu.url}`, buttonText: {displayText: '♫ Audio'}, type: 1}
-                    ]
-                    let buttonMessage = {
-                        image: { url: anu.thumbnail},
-                        caption: `「 _Anya Youtube Player_ 」
-
-    Title : ${anu.title}
-    ID : ${anu.videoId}
-    Duration : ${anu.timestamp}
-    Viewers : ${anu.views}
-    Uploaded : ${anu.ago}
-    Author : ${anu.author.name}
-    Channel : ${anu.author.url}
-    Url : ${anu.url}`,
-                        footer: `${global.BotName}`,
-                        buttons: buttons,
-                        headerType: 4
-                    }
-                    Miku.sendMessage(m.chat, buttonMessage, { quoted: m })
-                }
-                break
-          
-                
-case 'ytdl2': case 'yt2': case 'youtube2':{
-	if (isBan) return reply(mess.banned)
-	if (isBanChat) return reply(mess.bangc)
- reply(mess.wait)
-if (!args[0]) return reply(mess.nolink)
-try {
-hx.youtube(args[0]).then(async(res) => {
-textyt = `「 _Anya Youtube Downloader_ 」
-Title : ${res.title}
-Size : ${res.size}
-Quality : ${res.quality}
-_Select video or audio and wait a while_`
-let buttons = [
-{buttonId: `-ytmp4 ${res.link}`, buttonText: {displayText: '► Video'}, type: 1},
-{buttonId: `-ytmp3 ${res.link}`, buttonText: {displayText: '♫ Audio'}, type: 1}
-]
-let buttonMessage = {
-image: {url:res.thumb},
-caption: textyt,
-footer: BotName,
-buttons: buttons,
-headerType: 4,
-
-}
-Miku.sendMessage(from, buttonMessage, {quoted:m})
-}).catch(_ => _)
-} catch {
-reply("Error link!")
-}
-}
-break
-
-case 'play2': case 'ytplay2': {
-   if (isBan) return reply(mess.ban)	 			
-if (isBanChat) return reply(mess.banChat)
-let yts = require("yt-search")
-let search = await yts(text)
-let anu = search.videos[Math.floor(Math.random() * search.videos.length)]
-let ytvc = await hx.youtube(anu.url)
-let buttons = [
-{buttonId: `ytvd ${ytvc.link}`, buttonText: {displayText: '► Video'}, type: 1},
-{buttonId: `ytad ${ytvc.mp3}`, buttonText: {displayText: '♫ Audio'}, type: 1}
-]
-let buttonMessage = {
-image: { url: anu.thumbnail },
-caption: `*| ANYA YOUTUBE PLAY |*
-
-${global.themeemoji} Title : ${anu.title}
-${global.themeemoji} Ext : Search
-${global.themeemoji} ID : ${anu.videoId}
-${global.themeemoji} Duration : ${anu.timestamp}
-${global.themeemoji} Viewers : ${anu.views}
-${global.themeemoji} Uploaded : ${anu.ago}
-${global.themeemoji} Author : ${anu.author.name}
-${global.themeemoji} Channel : ${anu.author.url}
-${global.themeemoji} Description : ${anu.description}
-${global.themeemoji} Url : ${anu.url}`,
-footer: `${global.botname}`,
-buttons: buttons,
-headerType: 4,
-contextInfo:{externalAdReply:{
-title: anu.title,
-body: `${global.botname}`,
-thumbnail: BotLogo,
-mediaType:2,
-mediaUrl: anu.url,
-sourceUrl: anu.url
-}}
-}
-Miku.sendMessage(m.chat, buttonMessage, { quoted: m })
-}
-break
-
- case 'getmusic': case 'getvideo': case 'yt': case 'youtube': case 'ytvideo': case 'ytmp3': case 'ytmp4': case 'ytmusic': {
     if (isBan) return reply(mess.banned)	 			
  if (isBanChat) return reply(mess.bangc)
- if (!args[0]) return reply(mess.nolink)
- try {
- hx.youtube(args[0]).then(async(res) => {
- textyt = `「  _Anya Youtube Downloader_  」
-*Title :* ${res.title}
-*Size :* ${res.size}
-*Quality :* ${res.quality}
-*Select video or audio and wait a while*`
+ const YT=require('./lib/ytdlcore')
+ const { isUrl, fetchBuffer } = require('./lib/Function')
+
+ if(!text) return Miku.sendMessage(from,{text:"Pls enter song name to play!"},{quoted:m})
+ let yts = require("yt-search")
+ let search = await yts(text)
+ let anu = search.videos[0]
  let buttons = [
- {buttonId: `-ytvd ${res.link}`, buttonText: {displayText: '► Video'}, type: 1},
- {buttonId: `-ytad ${res.mp3}`, buttonText: {displayText: '♫ Audio'}, type: 1}
+ {buttonId: `-ytad ${text}`, buttonText: {displayText: '♫ Audio'}, type: 1},
+ {buttonId: `-ytvd ${text}`, buttonText: {displayText: '► Video'}, type: 1}
+
  ]
  let buttonMessage = {
- image: {url:res.thumb},
- caption: textyt,
- footer: `${BotName}`,
+ image: { url: anu.thumbnail },
+ caption: `「  _Miku Youtube Player 2.0_  」
+*Title :* ${anu.title}
+*Duration :* ${anu.timestamp}
+*Viewers :* ${anu.views}
+*Uploaded :* ${anu.ago}
+*Channel :* ${anu.author.name}
+*Url :* ${anu.url}`,
+ footer: `${global.BotName}`,
  buttons: buttons,
  headerType: 4,
 
  }
- Miku.sendMessage(from, buttonMessage, {quoted:m})
- }).catch(_ => _)
- } catch {
- reply("Link error!")
- }
- }
- break
-
-
- case 'ytvd': {
-    if (isBan) return reply(mess.banned)	 			
- if (isBanChat) return reply(mess.bangc)
- Miku.sendMessage(from, {video:{url:args[0]}, mimetype:"video/mp4", caption:"Here it is...",}, {quoted:m})
+ Miku.sendMessage(m.chat, buttonMessage, { quoted: m })
  }
  break
 
  case 'ytad': {
     if (isBan) return reply(mess.banned)	 			
     if (isBanChat) return reply(mess.bangc)
- Miku.sendMessage(from, {audio:{url:args[0]}, mimetype:"audio/mp4", ptt:true}, {quoted:m})
+    const YT=require('./lib/ytdlcore')
+    let yts = require("yt-search")
+    let search = await yts(text)
+    let anu = search.videos[0]
+    const ytmp3play = await YT.mp3(anu.url)
+    let stats = fs.statSync(ytmp3play.path)
+    let fileSizeInBytes = stats.size;
+    if (fileSizeInBytes > 60000000) return reply('Cant send audios longer than 60 MB!')
+    
+ await Miku.sendMessage(from, {document: fs.readFileSync(ytmp3play.path),fileName: anu.title + '.mp3',mimetype: 'audio/mpeg',}, {quoted:m})
  }
  break
- 
- case 'ytshorts': case 'shorts': {
+
+ case 'ytvd': {
     if (isBan) return reply(mess.banned)	 			
  if (isBanChat) return reply(mess.bangc)
-   if (!text) return reply(`*Use ${prefix + command} put yt shorts link*`)
-   if (!isUrl(args[0]) && !args[0].includes('youtube')) return reply(`The link you provided is not valid!`)
-   xfarrapi.Youtube(`${text}`).then(async (data) => {
-   if (data.medias[0].formattedSize.split('MB')[0] >= 999) return reply('*File Over Limit* '+util.format(data)) 
-   cap = `
-   「  *Youtube Shorts*  」
- *TITLE:* ${data.title}\n*QUALITY:* ${data.medias[0].quality}\n*SIZE:* ${data.medias[0].formattedSize}\n*DURATION* ${data.duration}\n*LINK:* ${data.url}\n\n*${BotName}*`
-   buf = await getBuffer(data.thumbnail)
-   Miku.sendMessage(m.chat, { image: { url: data.thumbnail }, jpegThumbnail:buf, caption: `${cap}` }, { quoted: m })
-   Miku.sendMessage(m.chat, { video: { url: data.medias[0].url }, jpegThumbnail:buf, caption: `*TITLE:* ${data.title}\n*QUALITY:* ${data.medias[0].quality}\n*SIZE:* ${data.medias[0].formattedSize}` }, { quoted: m })  
-                 }).catch((err) => {
-                     reply(mess.reply)
-                 })
-             }
-             break
+ const YT=require('./lib/ytdlcore')
+    let yts = require("yt-search")
+    let search = await yts(text)
+    let anu = search.videos[0]
+    const ytmp4play = await YT.mp4(anu.url)
+    let vidduration =ytmp4play.duration;
+    if (vidduration > 1800) return reply('Cant send videos longer than *30 min*')
+ Miku.sendMessage(from, {video:{url:ytmp4play.videoUrl}, mimetype:"video/mp4", caption:anu.title+' By *Miku MD*',}, {quoted:m})
+ }
+ break
 
+
+
+
+ case 'ytmp3': case 'ytmusic':  case 'ytmp4': case 'ytvideo': case 'ytdl':{
+    if (isBan) return reply(mess.banned)	 			
+ if (isBanChat) return reply(mess.bangc)
+ if (!args[0]) return reply(mess.nolink)
+
+ const YT=require('./lib/ytdlcore')
+ if(!text) return Miku.sendMessage(from,{text:"Please provide a valid youtube link!"},{quoted:m})
+ let yts = require("yt-search")
+ let search = await yts(text)
+ let anu = search.videos[0]
+ let buttons = [
+ {buttonId: `-ytad2 ${text}`, buttonText: {displayText: '♫ Audio'}, type: 1},
+ {buttonId: `-ytvd2 ${text}`, buttonText: {displayText: '► Video'}, type: 1}
+
+ ]
+ let buttonMessage = {
+ image: { url: anu.thumbnail },
+ caption: `「  _Miku Youtube Downloader 2.0_  」
+*Title :* ${anu.title}
+*Duration :* ${anu.timestamp}
+*Viewers :* ${anu.views}
+*Uploaded :* ${anu.ago}
+*Channel :* ${anu.author.name}
+*Url :* ${anu.url}`,
+ footer: `${global.BotName}`,
+ buttons: buttons,
+ headerType: 4,
+
+ }
+ Miku.sendMessage(m.chat, buttonMessage, { quoted: m })
+ }
+ break
+
+
+ case 'ytad2': {
+    if (isBan) return reply(mess.banned)	 			
+    if (isBanChat) return reply(mess.bangc)
+    const YT=require('./lib/ytdlcore')
+    const ytmp3play2 = await YT.mp3(text)
+    let stats = fs.statSync(ytmp3play2.path)
+    let fileSizeInBytes = stats.size;
+    if (fileSizeInBytes > 60000000) return reply('Cant send audios longer than 60 MB!')
+    
+ await Miku.sendMessage(from, {document: fs.readFileSync(ytmp3play2.path),fileName:'Miku_YTmp3_Downloader.mp3',mimetype: 'audio/mpeg',}, {quoted:m})
+ }
+ break
+
+ case 'ytvd2': {
+    if (isBan) return reply(mess.banned)	 			
+ if (isBanChat) return reply(mess.bangc)
+ const YT=require('./lib/ytdlcore')
+    const ytmp4play2 = await YT.mp4(text)
+    let vidduration =ytmp4play2.duration;
+    if (vidduration > 1800) return reply('Cant send videos longer than *30 min*')
+ Miku.sendMessage(from, {video:{url:ytmp4play2.videoUrl}, mimetype:"video/mp4", caption:'Downloaded by *Miku MD*',}, {quoted:m})
+ }
+ break
 
 case 'couplepp':  case 'ppcouple': {
 if (isBan) return reply(mess.banned)
